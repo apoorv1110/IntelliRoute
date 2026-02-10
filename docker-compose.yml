@@ -1,0 +1,44 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: intelliroute-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - intelliroute-network
+
+  backend:
+    build:
+      context: ./backend/IntelliRoute
+      dockerfile: Dockerfile
+    container_name: intelliroute-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/intelliroute
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - mongodb
+    networks:
+      - intelliroute-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: intelliroute-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - intelliroute-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  intelliroute-network:
+    driver: bridge

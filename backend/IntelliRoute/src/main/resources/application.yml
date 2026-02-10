@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: intelliroute
+  config:
+    import: optional:file:.env[.properties]
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/intelliroute}
+      database: ${MONGODB_DATABASE:intelliroute}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+ai:
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-1.5-flash}
+    endpoint: ${GEMINI_ENDPOINT:https://generativelanguage.googleapis.com/v1beta}
+
+assignment:
+  scheduler:
+    delay-ms: ${ASSIGNMENT_SCHEDULER_DELAY_MS:5000}
+  sla:
+    check-ms: ${SLA_CHECK_MS:60000}
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+logging:
+  level:
+    com.intelliroute: INFO
+
